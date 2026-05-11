@@ -1,0 +1,26 @@
+{
+    'name': 'Centro Sanitario - Cuidados Médicos',
+    'version': '1.0.0',
+    'category': 'Healthcare',
+    'summary': 'Módulo para gestión de tratamientos, rescates y medicamentos',
+    'author': 'Equilibrium Dev Team',
+    'license': 'LGPL-3',
+    'depends': [
+        'base',
+        'mail',
+        'cs_resident',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/record_rules.xml',
+        'data/ir_sequence.xml',
+        'views/cs_rescue_views.xml',
+        'views/cs_medical_treatment_views.xml',
+        'views/cs_analgesia_views.xml',
+        'views/cs_clinical_test_views.xml',
+        'views/cs_follow_up_views.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

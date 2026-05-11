@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cs_rescue_all,cs.rescue - Acceso Total,model_cs_rescue,base.group_user,1,1,1,0
+access_cs_rescue_admin_administration,cs.rescue.administration - Acceso Total,model_cs_rescue_administration,base.group_user,1,1,1,0
+access_cs_medical_treatment_all,cs.medical.treatment - Acceso Total,model_cs_medical_treatment,base.group_user,1,1,1,0
+access_cs_analgesia_all,cs.analgesia - Acceso Total,model_cs_analgesia,base.group_user,1,1,1,0
+access_cs_clinical_test_all,cs.clinical.test - Acceso Total,model_cs_clinical_test,base.group_user,1,1,1,0
+access_cs_follow_up_all,cs.follow.up - Acceso Total,model_cs_follow_up,base.group_user,1,1,1,0
