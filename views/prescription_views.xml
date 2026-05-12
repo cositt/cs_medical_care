@@ -49,13 +49,14 @@
 
                         <group string="Medicamentos">
                             <field name="prescription_line_ids" nolabel="1">
-                                <tree string="Medicamentos" editable="bottom">
+                                <list string="Medicamentos" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
                                     <field name="medication_name"/>
                                     <field name="dosage"/>
                                     <field name="frequency"/>
                                     <field name="via"/>
                                     <field name="duration_days"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
 
