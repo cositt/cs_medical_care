@@ -37,7 +37,7 @@
                         </button>
                     </div>
                 </xpath>
-                <xpath expr="//group[@string='Observaciones']" position="before">
+                <xpath expr="//group[@name='resident_notes_group']" position="before">
                     <group string="Prescripciones médicas activas">
                         <field name="prescription_ids" nolabel="1" colspan="2"
                                domain="[('state', '=', 'activa')]"
