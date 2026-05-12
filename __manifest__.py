@@ -10,6 +10,7 @@
         'views/medical_consultation_views.xml',
         'views/prescription_views.xml',
         'views/medical_history_views.xml',
+        'views/resident_medical_views.xml',
     ],
     'installable': True,
     'application': False,
