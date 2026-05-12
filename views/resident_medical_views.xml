@@ -37,7 +37,8 @@
                         </button>
                     </div>
                 </xpath>
-                <xpath expr="//group[@name='resident_notes_group']" position="before">
+                <!-- No usar @string en xpath (Odoo 17). Localizar por campo estable notas. -->
+                <xpath expr="//group[field[@name='notas']]" position="before">
                     <group string="Prescripciones médicas activas">
                         <field name="prescription_ids" nolabel="1" colspan="2"
                                domain="[('state', '=', 'activa')]"
