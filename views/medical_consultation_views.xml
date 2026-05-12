@@ -87,7 +87,6 @@
                     <filter name="filter_programadas" string="Programadas" domain="[('state', '=', 'programada')]"/>
                     <filter name="filter_en_curso" string="En Curso" domain="[('state', '=', 'en_curso')]"/>
                     <filter name="filter_completadas" string="Completadas" domain="[('state', '=', 'completada')]"/>
-                    <filter name="filter_hoy" string="Hoy" domain="[('consultation_date', '&gt;=', context_today().strftime('%Y-%m-%d')), ('consultation_date', '&lt;', (context_today() + timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
                 </search>
             </field>
         </record>
