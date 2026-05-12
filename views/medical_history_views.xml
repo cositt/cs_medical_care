@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- VISTA LIST PARA HISTORIAL MÉDICO -->
+        <record id="medical_history_view_list" model="ir.ui.view">
+            <field name="name">cs.medical.history.list</field>
+            <field name="model">cs.medical.history</field>
+            <field name="arch" type="xml">
+                <list string="Historial Médico">
+                    <field name="entry_date" string="Fecha"/>
+                    <field name="resident_id" string="Residente"/>
+                    <field name="entry_type" string="Tipo"/>
+                    <field name="title" string="Título"/>
+                    <field name="professional_id" string="Profesional"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- VISTA FORM PARA HISTORIAL MÉDICO -->
+        <record id="medical_history_view_form" model="ir.ui.view">
+            <field name="name">cs.medical.history.form</field>
+            <field name="model">cs.medical.history</field>
+            <field name="arch" type="xml">
+                <form string="Registro de Historial Médico">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" placeholder="Título del registro..."/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Información General" col="2">
+                                <field name="resident_id"/>
+                                <field name="partner_id"/>
+                                <field name="entry_date"/>
+                                <field name="entry_type"/>
+                                <field name="professional_id"/>
+                                <field name="is_confidential"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Referencias" col="2">
+                                <field name="consultation_id"/>
+                                <field name="prescription_id"/>
+                            </group>
+                        </group>
+
+                        <group string="Descripción" col="1">
+                            <field name="description" nolabel="1" placeholder="Descripción detallada del registro..."/>
+                        </group>
+
+                        <group string="Constantes Vitales" col="2">
+                            <field name="temperature"/>
+                            <field name="blood_pressure"/>
+                            <field name="heart_rate"/>
+                            <field name="respiratory_rate"/>
+                            <field name="oxygen_saturation"/>
+                            <field name="weight"/>
+                            <field name="height"/>
+                        </group>
+
+                        <group>
+                            <group string="Notas Clínicas" col="1">
+                                <field name="clinical_notes" nolabel="1" placeholder="Notas clínicas..."/>
+                            </group>
+                            <group string="Plan de Tratamiento" col="1">
+                                <field name="treatment_plan" nolabel="1" placeholder="Plan de tratamiento..."/>
+                            </group>
+                            <group string="Notas de Seguimiento" col="1">
+                                <field name="follow_up_notes" nolabel="1" placeholder="Notas de seguimiento..."/>
+                            </group>
+                        </group>
+
+                        <group string="Documentación" col="1">
+                            <field name="attachment_ids" nolabel="1" widget="many2many_binary"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- VISTA SEARCH PARA HISTORIAL MÉDICO -->
+        <record id="medical_history_view_search" model="ir.ui.view">
+            <field name="name">cs.medical.history.search</field>
+            <field name="model">cs.medical.history</field>
+            <field name="arch" type="xml">
+                <search string="Historial Médico">
+                    <field name="resident_id" string="Residente"/>
+                    <field name="entry_date" string="Fecha"/>
+                    <field name="entry_type" string="Tipo"/>
+                    <field name="professional_id" string="Profesional"/>
+                    <separator/>
+                    <filter name="filter_consultas" string="Consultas" domain="[('entry_type', '=', 'consulta')]"/>
+                    <filter name="filter_diagnosticos" string="Diagnósticos" domain="[('entry_type', '=', 'diagnostico')]"/>
+                    <filter name="filter_medicacion" string="Medicación" domain="[('entry_type', '=', 'medicacion')]"/>
+                    <filter name="filter_confidential" string="Confidencial" domain="[('is_confidential', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- ACCIÓN PARA HISTORIAL MÉDICO -->
+        <record id="medical_history_action" model="ir.actions.act_window">
+            <field name="name">Historial Médico</field>
+            <field name="res_model">cs.medical.history</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Registre el primer evento en el historial médico
+                </p>
+            </field>
+        </record>
+
+        <!-- MENÚ PARA HISTORIAL MÉDICO -->
+        <menuitem id="cs_menu_medical_history" parent="cs_menu_medical" name="Historial Médico" action="medical_history_action" sequence="30"/>
+
+    </data>
+</odoo>

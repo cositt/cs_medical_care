@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- VISTA LIST PARA CONSULTAS MÉDICAS -->
+        <record id="medical_consultation_view_list" model="ir.ui.view">
+            <field name="name">cs.medical.consultation.list</field>
+            <field name="model">cs.medical.consultation</field>
+            <field name="arch" type="xml">
+                <list string="Consultas Médicas">
+                    <field name="consultation_date" string="Fecha"/>
+                    <field name="resident_id" string="Residente"/>
+                    <field name="medical_professional_id" string="Profesional"/>
+                    <field name="consultation_type" string="Tipo"/>
+                    <field name="state" string="Estado"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- VISTA FORM PARA CONSULTAS MÉDICAS -->
+        <record id="medical_consultation_view_form" model="ir.ui.view">
+            <field name="name">cs.medical.consultation.form</field>
+            <field name="model">cs.medical.consultation</field>
+            <field name="arch" type="xml">
+                <form string="Consulta Médica">
+                    <header>
+                        <button name="action_mark_in_progress" string="Marcar en Curso" type="object" class="oe_highlight"/>
+                        <button name="action_mark_completed" string="Marcar Completada" type="object" class="oe_highlight"/>
+                        <button name="action_cancel" string="Cancelar" type="object"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Información de la Consulta" col="2">
+                                <field name="resident_id"/>
+                                <field name="partner_id"/>
+                                <field name="medical_professional_id"/>
+                                <field name="consultation_date"/>
+                                <field name="consultation_type"/>
+                                <field name="state" string="Estado de la Consulta"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Motivo y Diagnóstico" col="1">
+                                <field name="chief_complaint" nolabel="1" placeholder="Motivo de consulta..."/>
+                            </group>
+                            <group string="Diagnóstico" col="1">
+                                <field name="diagnosis" nolabel="1" placeholder="Diagnóstico..."/>
+                            </group>
+                        </group>
+
+                        <group string="Evaluación" col="1">
+                            <field name="assessment_template_id" placeholder="Seleccionar plantilla de evaluación"/>
+                            <field name="assessment_id" readonly="1"/>
+                        </group>
+
+                        <group string="Observaciones Clínicas" col="1">
+                            <field name="notes" nolabel="1" placeholder="Observaciones..."/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- VISTA SEARCH PARA CONSULTAS MÉDICAS -->
+        <record id="medical_consultation_view_search" model="ir.ui.view">
+            <field name="name">cs.medical.consultation.search</field>
+            <field name="model">cs.medical.consultation</field>
+            <field name="arch" type="xml">
+                <search string="Consultas Médicas">
+                    <field name="resident_id" string="Residente"/>
+                    <field name="medical_professional_id" string="Profesional"/>
+                    <field name="consultation_date" string="Fecha"/>
+                    <separator/>
+                    <filter name="filter_programadas" string="Programadas" domain="[('state', '=', 'programada')]"/>
+                    <filter name="filter_en_curso" string="En Curso" domain="[('state', '=', 'en_curso')]"/>
+                    <filter name="filter_completadas" string="Completadas" domain="[('state', '=', 'completada')]"/>
+                    <filter name="filter_hoy" string="Hoy" domain="[('consultation_date', '&gt;=', context_today().strftime('%Y-%m-%d')), ('consultation_date', '&lt;', (context_today() + timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- ACCIÓN PARA CONSULTAS MÉDICAS -->
+        <record id="medical_consultation_action" model="ir.actions.act_window">
+            <field name="name">Consultas Médicas</field>
+            <field name="res_model">cs.medical.consultation</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Registre la primera consulta médica
+                </p>
+            </field>
+        </record>
+
+        <!-- MENÚ PARA CONSULTAS MÉDICAS -->
+        <menuitem id="cs_menu_medical" name="Atención Médica" sequence="40" web_icon="cs_medical_care,static/description/icon.png"/>
+        <menuitem id="cs_menu_medical_consultation" parent="cs_menu_medical" name="Consultas Médicas" action="medical_consultation_action" sequence="10"/>
+
+    </data>
+</odoo>

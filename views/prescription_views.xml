@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- VISTA LIST PARA PRESCRIPCIONES -->
+        <record id="prescription_view_list" model="ir.ui.view">
+            <field name="name">cs.prescription.list</field>
+            <field name="model">cs.prescription</field>
+            <field name="arch" type="xml">
+                <list string="Prescripciones">
+                    <field name="prescription_date" string="Fecha"/>
+                    <field name="resident_id" string="Residente"/>
+                    <field name="medical_professional_id" string="Médico"/>
+                    <field name="state" string="Estado"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- VISTA FORM PARA PRESCRIPCIONES -->
+        <record id="prescription_view_form" model="ir.ui.view">
+            <field name="name">cs.prescription.form</field>
+            <field name="model">cs.prescription</field>
+            <field name="arch" type="xml">
+                <form string="Prescripción">
+                    <header>
+                        <button name="action_activate" string="Activar" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_pause" string="Pausar" type="object" invisible="state not in ['activa']"/>
+                        <button name="action_finish" string="Finalizar" type="object" invisible="state not in ['activa', 'pausada']"/>
+                        <button name="action_cancel" string="Cancelar" type="object"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Información General" col="2">
+                                <field name="resident_id"/>
+                                <field name="partner_id"/>
+                                <field name="medical_professional_id"/>
+                                <field name="prescription_date"/>
+                                <field name="consultation_id"/>
+                                <field name="state" string="Estado de Prescripción"/>
+                            </group>
+                        </group>
+
+                        <group string="Medicamentos">
+                            <field name="prescription_line_ids" nolabel="1">
+                                <tree string="Medicamentos" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="medication_name"/>
+                                    <field name="dosage"/>
+                                    <field name="frequency"/>
+                                    <field name="via"/>
+                                    <field name="duration_days"/>
+                                </tree>
+                            </field>
+                        </group>
+
+                        <group string="Instrucciones" col="1">
+                            <field name="instructions" nolabel="1" placeholder="Instrucciones especiales para el paciente..."/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- VISTA SEARCH PARA PRESCRIPCIONES -->
+        <record id="prescription_view_search" model="ir.ui.view">
+            <field name="name">cs.prescription.search</field>
+            <field name="model">cs.prescription</field>
+            <field name="arch" type="xml">
+                <search string="Prescripciones">
+                    <field name="resident_id" string="Residente"/>
+                    <field name="medical_professional_id" string="Médico"/>
+                    <field name="prescription_date" string="Fecha"/>
+                    <separator/>
+                    <filter name="filter_draft" string="Borradores" domain="[('state', '=', 'draft')]"/>
+                    <filter name="filter_activas" string="Activas" domain="[('state', '=', 'activa')]"/>
+                    <filter name="filter_pausadas" string="Pausadas" domain="[('state', '=', 'pausada')]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- ACCIÓN PARA PRESCRIPCIONES -->
+        <record id="prescription_action" model="ir.actions.act_window">
+            <field name="name">Prescripciones</field>
+            <field name="res_model">cs.prescription</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Registre la primera prescripción
+                </p>
+            </field>
+        </record>
+
+        <!-- MENÚ PARA PRESCRIPCIONES -->
+        <menuitem id="cs_menu_prescription" parent="cs_menu_medical" name="Prescripciones" action="prescription_action" sequence="20"/>
+
+    </data>
+</odoo>
