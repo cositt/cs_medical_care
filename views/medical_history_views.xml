@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        
-        <!-- VISTA LIST PARA HISTORIAL MÉDICO -->
         <record id="medical_history_view_list" model="ir.ui.view">
             <field name="name">cs.medical.history.list</field>
             <field name="model">cs.medical.history</field>
             <field name="arch" type="xml">
-                <list string="Historial Médico">
+                <list string="Historia clínica">
                     <field name="entry_date" string="Fecha"/>
                     <field name="resident_id" string="Residente"/>
                     <field name="entry_type" string="Tipo"/>
@@ -17,12 +15,11 @@
             </field>
         </record>
 
-        <!-- VISTA FORM PARA HISTORIAL MÉDICO -->
         <record id="medical_history_view_form" model="ir.ui.view">
             <field name="name">cs.medical.history.form</field>
             <field name="model">cs.medical.history</field>
             <field name="arch" type="xml">
-                <form string="Registro de Historial Médico">
+                <form string="Historia clínica (registro básico)">
                     <sheet>
                         <div class="oe_title">
                             <h1>
@@ -83,12 +80,11 @@
             </field>
         </record>
 
-        <!-- VISTA SEARCH PARA HISTORIAL MÉDICO -->
         <record id="medical_history_view_search" model="ir.ui.view">
             <field name="name">cs.medical.history.search</field>
             <field name="model">cs.medical.history</field>
             <field name="arch" type="xml">
-                <search string="Historial Médico">
+                <search string="Historia clínica">
                     <field name="resident_id" string="Residente"/>
                     <field name="entry_date" string="Fecha"/>
                     <field name="entry_type" string="Tipo"/>
@@ -102,9 +98,8 @@
             </field>
         </record>
 
-        <!-- ACCIÓN PARA HISTORIAL MÉDICO -->
         <record id="medical_history_action" model="ir.actions.act_window">
-            <field name="name">Historial Médico</field>
+            <field name="name">Historia clínica (básica)</field>
             <field name="res_model">cs.medical.history</field>
             <field name="view_mode">list,form</field>
             <field name="help" type="html">
@@ -114,8 +109,7 @@
             </field>
         </record>
 
-        <!-- MENÚ PARA HISTORIAL MÉDICO -->
-        <menuitem id="cs_menu_medical_history" parent="cs_menu_medical" name="Historial Médico" action="medical_history_action" sequence="30"/>
+        <menuitem id="cs_menu_medical_history" parent="cs_menu_medical" name="Historia clínica (básica)" action="medical_history_action" sequence="30"/>
 
     </data>
 </odoo>

@@ -1,6 +1,6 @@
 {
     'name': 'Centro Sanitario - Atención Médica',
-    'version': '1.0.0',
+    'version': '1.1.0',
     'category': 'Healthcare',
     'author': 'Equilibrium',
     'license': 'LGPL-3',
@@ -9,6 +9,7 @@
         'security/ir.model.access.csv',
         'views/medical_consultation_views.xml',
         'views/prescription_views.xml',
+        'views/medical_extended_views.xml',
         'views/medical_history_views.xml',
         'views/resident_medical_views.xml',
     ],

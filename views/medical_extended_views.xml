@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <record id="medical_rescue_view_list" model="ir.ui.view">
+        <field name="name">cs.medical.rescue.list</field>
+        <field name="model">cs.medical.rescue</field>
+        <field name="arch" type="xml">
+            <list string="Rescates">
+                <field name="intervention_datetime"/>
+                <field name="resident_id"/>
+                <field name="scenario_type"/>
+                <field name="reporter_id"/>
+                <field name="outcome"/>
+            </list>
+        </field>
+    </record>
+    <record id="medical_rescue_view_form" model="ir.ui.view">
+        <field name="name">cs.medical.rescue.form</field>
+        <field name="model">cs.medical.rescue</field>
+        <field name="arch" type="xml">
+            <form string="Rescate / intervención">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="resident_id"/>
+                            <field name="partner_id"/>
+                            <field name="intervention_datetime"/>
+                            <field name="scenario_type"/>
+                            <field name="location_detail"/>
+                            <field name="reporter_id"/>
+                            <field name="consultation_id"/>
+                        </group>
+                        <group>
+                            <field name="outcome"/>
+                            <field name="outcome_notes"/>
+                        </group>
+                    </group>
+                    <group string="Hallazgos">
+                        <field name="findings" nolabel="1"/>
+                    </group>
+                    <group string="Actuación">
+                        <field name="actions_performed" nolabel="1"/>
+                    </group>
+                    <group string="Adjuntos">
+                        <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="medical_rescue_view_search" model="ir.ui.view">
+        <field name="name">cs.medical.rescue.search</field>
+        <field name="model">cs.medical.rescue</field>
+        <field name="arch" type="xml">
+            <search string="Rescates">
+                <field name="resident_id"/>
+                <field name="scenario_type"/>
+                <separator/>
+                <filter name="f_traslado" string="Traslado hospital" domain="[('outcome', '=', 'traslado_hospital')]"/>
+            </search>
+        </field>
+    </record>
+    <record id="medical_rescue_action" model="ir.actions.act_window">
+        <field name="name">Rescates</field>
+        <field name="res_model">cs.medical.rescue</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="medical_analgesia_view_list" model="ir.ui.view">
+        <field name="name">cs.medical.analgesia.list</field>
+        <field name="model">cs.medical.analgesia</field>
+        <field name="arch" type="xml">
+            <list string="Analgesia">
+                <field name="administration_datetime"/>
+                <field name="resident_id"/>
+                <field name="medication_description"/>
+                <field name="pain_scale_before"/>
+                <field name="pain_scale_after"/>
+                <field name="professional_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="medical_analgesia_view_form" model="ir.ui.view">
+        <field name="name">cs.medical.analgesia.form</field>
+        <field name="model">cs.medical.analgesia</field>
+        <field name="arch" type="xml">
+            <form string="Analgesia">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="resident_id"/>
+                            <field name="partner_id"/>
+                            <field name="administration_datetime"/>
+                            <field name="professional_id"/>
+                            <field name="consultation_id"/>
+                            <field name="prescription_id"/>
+                        </group>
+                        <group string="Dolor (EVA 0–10)">
+                            <field name="pain_scale_before"/>
+                            <field name="pain_scale_after"/>
+                        </group>
+                    </group>
+                    <group string="Administración">
+                        <group>
+                            <field name="medication_description"/>
+                            <field name="dose"/>
+                            <field name="route"/>
+                        </group>
+                    </group>
+                    <group string="Observaciones">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="medical_analgesia_action" model="ir.actions.act_window">
+        <field name="name">Analgesia</field>
+        <field name="res_model">cs.medical.analgesia</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="medical_clinic_test_view_list" model="ir.ui.view">
+        <field name="name">cs.medical.clinic.test.list</field>
+        <field name="model">cs.medical.clinic.test</field>
+        <field name="arch" type="xml">
+            <list string="Tests / pruebas">
+                <field name="test_date"/>
+                <field name="resident_id"/>
+                <field name="test_category"/>
+                <field name="title"/>
+                <field name="ordered_by_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="medical_clinic_test_view_form" model="ir.ui.view">
+        <field name="name">cs.medical.clinic.test.form</field>
+        <field name="model">cs.medical.clinic.test</field>
+        <field name="arch" type="xml">
+            <form string="Test / prueba">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="resident_id"/>
+                            <field name="partner_id"/>
+                            <field name="test_date"/>
+                            <field name="test_category"/>
+                            <field name="title"/>
+                            <field name="ordered_by_id"/>
+                            <field name="consultation_id"/>
+                        </group>
+                    </group>
+                    <group string="Resultado">
+                        <field name="result_summary" nolabel="1"/>
+                    </group>
+                    <group string="Adjuntos">
+                        <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="medical_clinic_test_action" model="ir.actions.act_window">
+        <field name="name">Tests / pruebas</field>
+        <field name="res_model">cs.medical.clinic.test</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="medical_treatment_view_list" model="ir.ui.view">
+        <field name="name">cs.medical.treatment.list</field>
+        <field name="model">cs.medical.treatment</field>
+        <field name="arch" type="xml">
+            <list string="Tratamientos">
+                <field name="start_date"/>
+                <field name="resident_id"/>
+                <field name="title"/>
+                <field name="treatment_type"/>
+                <field name="state"/>
+                <field name="responsible_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="medical_treatment_view_form" model="ir.ui.view">
+        <field name="name">cs.medical.treatment.form</field>
+        <field name="model">cs.medical.treatment</field>
+        <field name="arch" type="xml">
+            <form string="Tratamiento">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="resident_id"/>
+                            <field name="partner_id"/>
+                            <field name="treatment_type"/>
+                            <field name="state"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="responsible_id"/>
+                            <field name="consultation_id"/>
+                        </group>
+                    </group>
+                    <group string="Descripción">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <group string="Referencia">
+                        <field name="name" readonly="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="medical_treatment_action" model="ir.actions.act_window">
+        <field name="name">Tratamientos</field>
+        <field name="res_model">cs.medical.treatment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="medical_followup_view_list" model="ir.ui.view">
+        <field name="name">cs.medical.followup.list</field>
+        <field name="model">cs.medical.followup</field>
+        <field name="arch" type="xml">
+            <list string="Seguimiento">
+                <field name="planned_date"/>
+                <field name="resident_id"/>
+                <field name="title"/>
+                <field name="state"/>
+                <field name="coordinator_id"/>
+            </list>
+        </field>
+    </record>
+    <record id="medical_followup_view_form" model="ir.ui.view">
+        <field name="name">cs.medical.followup.form</field>
+        <field name="model">cs.medical.followup</field>
+        <field name="arch" type="xml">
+            <form string="Seguimiento">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="title"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="resident_id"/>
+                            <field name="partner_id"/>
+                            <field name="planned_date"/>
+                            <field name="completed_date"/>
+                            <field name="state"/>
+                            <field name="coordinator_id"/>
+                            <field name="consultation_id"/>
+                        </group>
+                    </group>
+                    <group string="Indicaciones">
+                        <field name="instructions" nolabel="1"/>
+                    </group>
+                    <group string="Referencia">
+                        <field name="name" readonly="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="medical_followup_action" model="ir.actions.act_window">
+        <field name="name">Seguimiento</field>
+        <field name="res_model">cs.medical.followup</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="cs_menu_medical_rescue" parent="cs_menu_medical" name="Rescates" action="medical_rescue_action" sequence="25"/>
+    <menuitem id="cs_menu_medical_analgesia" parent="cs_menu_medical" name="Analgesia" action="medical_analgesia_action" sequence="26"/>
+    <menuitem id="cs_menu_medical_treatment" parent="cs_menu_medical" name="Tratamientos" action="medical_treatment_action" sequence="27"/>
+    <menuitem id="cs_menu_medical_tests" parent="cs_menu_medical" name="Tests / pruebas" action="medical_clinic_test_action" sequence="28"/>
+    <menuitem id="cs_menu_medical_followup" parent="cs_menu_medical" name="Seguimiento" action="medical_followup_action" sequence="29"/>
+
+    </data>
+</odoo>

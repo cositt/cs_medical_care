@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        
-        <!-- VISTA LIST PARA CONSULTAS MÉDICAS -->
         <record id="medical_consultation_view_list" model="ir.ui.view">
             <field name="name">cs.medical.consultation.list</field>
             <field name="model">cs.medical.consultation</field>
@@ -17,7 +15,6 @@
             </field>
         </record>
 
-        <!-- VISTA FORM PARA CONSULTAS MÉDICAS -->
         <record id="medical_consultation_view_form" model="ir.ui.view">
             <field name="name">cs.medical.consultation.form</field>
             <field name="model">cs.medical.consultation</field>
@@ -70,7 +67,6 @@
             </field>
         </record>
 
-        <!-- VISTA SEARCH PARA CONSULTAS MÉDICAS -->
         <record id="medical_consultation_view_search" model="ir.ui.view">
             <field name="name">cs.medical.consultation.search</field>
             <field name="model">cs.medical.consultation</field>
@@ -87,7 +83,6 @@
             </field>
         </record>
 
-        <!-- ACCIÓN PARA CONSULTAS MÉDICAS -->
         <record id="medical_consultation_action" model="ir.actions.act_window">
             <field name="name">Consultas Médicas</field>
             <field name="res_model">cs.medical.consultation</field>
@@ -99,8 +94,7 @@
             </field>
         </record>
 
-        <!-- MENÚ PARA CONSULTAS MÉDICAS -->
-        <menuitem id="cs_menu_medical" name="Atención Médica" sequence="40" web_icon="cs_medical_care,static/description/icon.png"/>
+        <menuitem id="cs_menu_medical" name="Atención Médica" parent="cs_resident.cs_menu" sequence="35"/>
         <menuitem id="cs_menu_medical_consultation" parent="cs_menu_medical" name="Consultas Médicas" action="medical_consultation_action" sequence="10"/>
 
     </data>

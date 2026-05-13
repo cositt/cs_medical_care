@@ -1,58 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="resident_view_form_medical_inherit" model="ir.ui.view">
-            <field name="name">cs.resident.form.medical.inherit</field>
-            <field name="model">cs.resident</field>
-            <field name="inherit_id" ref="cs_resident.resident_view_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//sheet/div[@class='oe_title']" position="before">
-                    <div class="oe_button_box" name="button_box">
-                        <button
-                            name="action_open_medical_consultations"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-stethoscope"
-                            invisible="consultation_count == 0"
-                        >
-                            <field name="consultation_count" widget="statinfo" string="Consultas"/>
-                        </button>
-                        <button
-                            name="action_open_medical_history"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-history"
-                            invisible="medical_history_count == 0"
-                        >
-                            <field name="medical_history_count" widget="statinfo" string="Historial"/>
-                        </button>
-                        <button
-                            name="action_open_prescriptions_all"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-medkit"
-                            invisible="prescription_total_count == 0"
-                        >
-                            <field name="prescription_total_count" widget="statinfo" string="Prescripciones"/>
-                        </button>
-                    </div>
-                </xpath>
-                <!-- No usar @string en xpath (Odoo 17). Localizar por campo estable notas. -->
-                <xpath expr="//group[field[@name='notas']]" position="before">
-                    <group string="Prescripciones médicas activas">
-                        <field name="prescription_ids" nolabel="1" colspan="2"
-                               domain="[('state', '=', 'activa')]"
-                               context="{'default_resident_id': id}">
-                            <list create="true" edit="false" delete="false">
-                                <field name="name"/>
-                                <field name="prescription_date"/>
-                                <field name="medical_professional_id"/>
-                                <field name="state"/>
-                            </list>
-                        </field>
-                    </group>
-                </xpath>
-            </field>
-        </record>
+    <record id="resident_view_form_medical_inherit" model="ir.ui.view">
+        <field name="name">cs.resident.form.medical.inherit</field>
+        <field name="model">cs.resident</field>
+        <field name="inherit_id" ref="cs_resident.resident_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button
+                        name="action_open_medical_consultations"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-stethoscope"
+                    >
+                        <field name="consultation_count" widget="statinfo" string="Consultas"/>
+                    </button>
+                    <button
+                        name="action_open_medical_history"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-history"
+                    >
+                        <field name="medical_history_count" widget="statinfo" string="Historia"/>
+                    </button>
+                    <button
+                        name="action_open_prescriptions_all"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-medkit"
+                    >
+                        <field name="prescription_total_count" widget="statinfo" string="Prescripciones"/>
+                    </button>
+                    <button
+                        name="action_open_medical_rescues"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-life-ring"
+                    >
+                        <field name="medical_rescue_count" widget="statinfo" string="Rescates"/>
+                    </button>
+                    <button
+                        name="action_open_medical_analgesia"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-heartbeat"
+                    >
+                        <field name="medical_analgesia_count" widget="statinfo" string="Analgesia"/>
+                    </button>
+                    <button
+                        name="action_open_medical_treatments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-heart"
+                    >
+                        <field name="medical_treatment_count" widget="statinfo" string="Tratamientos"/>
+                    </button>
+                    <button
+                        name="action_open_medical_tests"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-flask"
+                    >
+                        <field name="medical_test_count" widget="statinfo" string="Tests"/>
+                    </button>
+                    <button
+                        name="action_open_medical_followups"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                    >
+                        <field name="medical_followup_pending_count" widget="statinfo" string="Seguim. pend."/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='resident_notes_group']" position="before">
+                <group string="Prescripciones médicas activas">
+                    <field name="prescription_ids" nolabel="1" colspan="2"
+                           domain="[('state', '=', 'activa')]"
+                           context="{'default_resident_id': id}">
+                        <list create="true" edit="false" delete="false">
+                            <field name="name"/>
+                            <field name="prescription_date"/>
+                            <field name="medical_professional_id"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
     </data>
 </odoo>

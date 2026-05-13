@@ -3,3 +3,8 @@ access_medical_consultation,Medical Consultation Access,model_cs_medical_consult
 access_prescription,Prescription Access,model_cs_prescription,base.group_user,1,1,1,0
 access_prescription_line,Prescription Line Access,model_cs_prescription_line,base.group_user,1,1,1,0
 access_medical_history,Medical History Access,model_cs_medical_history,base.group_user,1,1,1,0
+access_medical_rescue,cs.medical.rescue user,model_cs_medical_rescue,base.group_user,1,1,1,0
+access_medical_analgesia,cs.medical.analgesia user,model_cs_medical_analgesia,base.group_user,1,1,1,0
+access_medical_clinic_test,cs.medical.clinic.test user,model_cs_medical_clinic_test,base.group_user,1,1,1,0
+access_medical_treatment,cs.medical.treatment user,model_cs_medical_treatment,base.group_user,1,1,1,0
+access_medical_followup,cs.medical.followup user,model_cs_medical_followup,base.group_user,1,1,1,0
