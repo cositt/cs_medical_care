@@ -87,6 +87,30 @@
                         </list>
                     </field>
                 </group>
+                <group string="Tratamientos activos">
+                    <field name="medical_treatment_ids" nolabel="1" colspan="2"
+                           domain="[('state', 'in', ['active', 'planned'])]"
+                           context="{'default_resident_id': id}">
+                        <list create="true" edit="false" delete="false">
+                            <field name="title"/>
+                            <field name="treatment_type"/>
+                            <field name="start_date"/>
+                            <field name="state"/>
+                            <field name="responsible_id"/>
+                        </list>
+                    </field>
+                </group>
+                <group string="Rescates recientes">
+                    <field name="medical_rescue_ids" nolabel="1" colspan="2"
+                           context="{'default_resident_id': id}">
+                        <list create="true" edit="false" delete="false" limit="5">
+                            <field name="intervention_datetime"/>
+                            <field name="scenario_type"/>
+                            <field name="reporter_id"/>
+                            <field name="outcome"/>
+                        </list>
+                    </field>
+                </group>
             </xpath>
         </field>
     </record>
