@@ -118,6 +118,22 @@
                         </list>
                     </field>
                 </group>
+                <group string="Enfermería" name="nursing_group" colspan="2">
+                    <group>
+                        <field name="allergies" placeholder="Alergias conocidas…"/>
+                        <field name="current_medications" placeholder="Medicación actual…"/>
+                    </group>
+                    <group>
+                        <field name="test_alcohol"/>
+                        <field name="test_alcohol_result"
+                               invisible="not test_alcohol"/>
+                        <field name="test_drugs"/>
+                        <field name="test_drugs_result"
+                               invisible="not test_drugs"/>
+                    </group>
+                    <field name="nursing_notes" nolabel="1" colspan="2"
+                           placeholder="Notas de enfermería…"/>
+                </group>
             </xpath>
         </field>
     </record>

@@ -44,6 +44,20 @@ class ResidentMedical(models.Model):
         "resident_id",
         string="Seguimiento",
     )
+    medical_prn_rescue_ids = fields.One2many(
+        "cs.medical.prn.rescue",
+        "resident_id",
+        string="PRN / Rescates enfermería",
+    )
+
+    # Enfermería
+    allergies = fields.Text(string="Alergias conocidas")
+    current_medications = fields.Text(string="Medicación actual")
+    nursing_notes = fields.Text(string="Notas de enfermería")
+    test_alcohol = fields.Boolean(string="Test alcohol realizado")
+    test_alcohol_result = fields.Char(string="Resultado alcohol")
+    test_drugs = fields.Boolean(string="Test multidrogas realizado")
+    test_drugs_result = fields.Char(string="Resultado multidrogas")
 
     prescription_active_count = fields.Integer(
         string="Prescripciones activas",
