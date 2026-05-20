@@ -197,3 +197,137 @@ class ResidentMedical(models.Model):
             "domain": [("resident_id", "=", self.id)],
             "context": {"default_resident_id": self.id},
         }
+
+    def action_print_emergency_sheet(self):
+        self.ensure_one()
+        return self.env.ref("cs_medical_care.action_report_emergency_sheet").report_action(self)
+
+    def get_emergency_sheet_data(self):
+        self.ensure_one()
+
+        freq_labels = dict(self.env["cs.prescription.line"]._fields["frequency"].selection)
+        via_labels = dict(self.env["cs.prescription.line"]._fields["via"].selection)
+        rescue_type_labels = dict(self.env["cs.medical.rescue"]._fields["scenario_type"].selection)
+        rescue_outcome_labels = dict(self.env["cs.medical.rescue"]._fields["outcome"].selection)
+        prn_route_labels = dict(self.env["cs.medical.prn.rescue"]._fields["route"].selection)
+        treatment_type_labels = dict(self.env["cs.medical.treatment"]._fields["treatment_type"].selection)
+
+        # Alergias: admission process (primario) → piai assessment (fallback)
+        allergies = ""
+        AdmissionModel = self.env.get("cs.admission.process")
+        if AdmissionModel:
+            admission = AdmissionModel.sudo().search([("resident_id", "=", self.id)], limit=1)
+            if admission:
+                allergies = admission.allergies or ""
+        if not allergies:
+            PiaiModel = self.env.get("cs.piai")
+            if PiaiModel:
+                piai = PiaiModel.sudo().search([("resident_id", "=", self.id)], limit=1)
+                if piai:
+                    PiaiAssessmentModel = self.env.get("cs.piai.assessment")
+                    if PiaiAssessmentModel:
+                        pa = PiaiAssessmentModel.sudo().search([("piai_id", "=", piai.id)], limit=1)
+                        if pa:
+                            allergies = getattr(pa, "allergies_text", "") or ""
+
+        # Prescripciones activas con sus líneas
+        prescriptions = []
+        for rx in self.prescription_ids.filtered(lambda p: p.state == "activa"):
+            for line in rx.prescription_line_ids:
+                prescriptions.append({
+                    "medication": line.medication_name,
+                    "dosage": line.dosage,
+                    "frequency": freq_labels.get(line.frequency, line.frequency or ""),
+                    "via": via_labels.get(line.via, line.via or ""),
+                    "notes": line.notes or "",
+                    "doctor": rx.medical_professional_id.name or "",
+                    "date": rx.prescription_date,
+                })
+
+        # Tratamientos activos
+        treatments = []
+        for t in self.medical_treatment_ids.filtered(lambda t: t.state in ["active", "planned"]):
+            treatments.append({
+                "title": t.title,
+                "type": treatment_type_labels.get(t.treatment_type, t.treatment_type),
+                "start": t.start_date,
+                "responsible": t.responsible_id.name or "",
+                "description": t.description or "",
+            })
+
+        # Últimos 5 rescates asistenciales
+        rescues = []
+        for r in self.medical_rescue_ids[:5]:
+            rescues.append({
+                "datetime": r.intervention_datetime,
+                "type": rescue_type_labels.get(r.scenario_type, r.scenario_type),
+                "findings": r.findings or "",
+                "actions": r.actions_performed or "",
+                "outcome": rescue_outcome_labels.get(r.outcome, r.outcome or ""),
+            })
+
+        # Últimos 5 PRN farmacológicos
+        prn_list = []
+        for p in self.env["cs.medical.prn.rescue"].search([("resident_id", "=", self.id)], limit=5):
+            prn_list.append({
+                "datetime": p.rescue_datetime,
+                "medication": p.medication_name,
+                "dose": p.dose,
+                "route": prn_route_labels.get(p.route, p.route),
+                "reason": p.reason or "",
+                "professional": p.professional_id.name or "",
+                "effect": p.effect_observed or "",
+            })
+
+        # Diagnósticos médicos (últimas 5 consultas completadas con diagnóstico)
+        diagnoses = []
+        for c in self.consultation_ids.filtered(lambda c: c.diagnosis and c.state == "completada")[:5]:
+            diagnoses.append({
+                "date": c.consultation_date,
+                "diagnosis": c.diagnosis,
+                "cie10_code": c.diagnosis_cie10_code or "",
+                "cie10_name": c.diagnosis_cie10_name or "",
+            })
+
+        # Evaluación psicológica más reciente
+        psych_data = None
+        AssessmentModel = self.env.get("cs.initial.assessment")
+        if AssessmentModel:
+            pa = AssessmentModel.sudo().search(
+                [("resident_id", "=", self.id)], order="assessment_date desc", limit=1
+            )
+            if pa:
+                psych_data = {
+                    "date": pa.assessment_date,
+                    "psychologist": pa.psychologist_id.name or "",
+                    "hypothesis": pa.initial_hypothesis or "",
+                    "risk": pa.risk_notes or "",
+                    "background": pa.background_summary or "",
+                    "recommendations": pa.recommendations or "",
+                }
+
+        # Historial clínico: últimas 10 entradas
+        history_type_labels = dict(self.env["cs.medical.history"]._fields["entry_type"].selection)
+        history = []
+        for h in self.medical_history_ids[:10]:
+            history.append({
+                "date": h.entry_date,
+                "type": history_type_labels.get(h.entry_type, h.entry_type),
+                "title": h.title,
+                "description": h.description or "",
+                "clinical_notes": h.clinical_notes or "",
+                "treatment_plan": h.treatment_plan or "",
+                "professional": h.professional_id.name or "",
+            })
+
+        return {
+            "allergies": allergies,
+            "prescriptions": prescriptions,
+            "treatments": treatments,
+            "rescues": rescues,
+            "prn_list": prn_list,
+            "diagnoses": diagnoses,
+            "psych_data": psych_data,
+            "history": history,
+            "generated_at": fields.Datetime.now(),
+        }

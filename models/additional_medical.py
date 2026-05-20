@@ -325,6 +325,11 @@ class MedicalTreatment(models.Model):
         "cs.medical.consultation",
         string="Consulta relacionada",
     )
+    line_ids = fields.One2many(
+        "cs.medical.treatment.line",
+        "treatment_id",
+        string="Ítems del tratamiento",
+    )
 
     @api.depends("resident_id", "title", "treatment_type", "start_date")
     def _compute_name(self):

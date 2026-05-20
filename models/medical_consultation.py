@@ -60,6 +60,8 @@ class MedicalConsultation(models.Model):
         help='Síntomas o razón principal de la consulta'
     )
     diagnosis = fields.Text(string='Diagnóstico')
+    diagnosis_cie10_code = fields.Char(string='Código CIE-10', size=10)
+    diagnosis_cie10_name = fields.Char(string='Diagnóstico CIE-10')
     notes = fields.Text(string='Observaciones Clínicas')
     
     # TEMPLATE PARA EVALUACIÓN
@@ -110,7 +112,7 @@ class MedicalConsultation(models.Model):
                 assessment = self.env['cs.followup.assessment'].create({
                     'template_id': self.assessment_template_id.id,
                     'patient_id': self.partner_id.id,
-                    'clinician_id': self.medical_professional_id.user_id.id if self.medical_professional_id and self.medical_professional_id.partner_id else self.env.user.id,
+                    'clinician_id': self.env.user.id,
                     'assessment_date': self.consultation_date.date() if self.consultation_date else fields.Date.context_today(self),
                 })
                 self.assessment_id = assessment.id
@@ -128,3 +130,11 @@ class MedicalConsultation(models.Model):
     def action_cancel(self):
         """Cancelar consulta"""
         self.state = 'cancelada'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        admission_id = self.env.context.get('default_admission_id')
+        if admission_id and records:
+            self.env['cs.admission.process'].browse(admission_id).medical_consultation_id = records[0]
+        return records

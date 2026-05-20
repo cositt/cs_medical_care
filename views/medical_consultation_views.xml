@@ -52,6 +52,12 @@
                                 <field name="diagnosis" nolabel="1" placeholder="Diagnóstico..."/>
                             </group>
                         </group>
+                        <group>
+                            <group string="Codificación CIE-10">
+                                <field name="diagnosis_cie10_code" placeholder="Ej: F10.2"/>
+                                <field name="diagnosis_cie10_name" placeholder="Ej: Trastorno mental y del comportamiento..."/>
+                            </group>
+                        </group>
 
                         <group string="Evaluación" col="1">
                             <field name="assessment_template_id" placeholder="Seleccionar plantilla de evaluación"/>

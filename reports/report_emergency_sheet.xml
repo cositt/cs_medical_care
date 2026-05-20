@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_emergency_sheet" model="ir.actions.report">
+        <field name="name">Hoja de Emergencia</field>
+        <field name="model">cs.resident</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">cs_medical_care.report_emergency_sheet</field>
+        <field name="print_report_name">'Hoja_Emergencia_' + (object.name or '').replace(' ', '_')</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="report_emergency_sheet">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <t t-set="data" t-value="doc.get_emergency_sheet_data()"/>
+                    <div class="page" style="font-size: 10pt;">
+
+                        <!-- CABECERA -->
+                        <div style="border-bottom: 3px solid #c0392b; margin-bottom: 10px; padding-bottom: 6px;">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td>
+                                        <span style="font-size: 16pt; font-weight: bold; color: #c0392b; letter-spacing: 1px;">
+                                            HOJA DE EMERGENCIA SANITARIA
+                                        </span>
+                                        <br/>
+                                        <small style="color: #666;">Documento de uso exclusivo del personal sanitario</small>
+                                    </td>
+                                    <td style="text-align: right; color: #666; font-size: 8pt; vertical-align: bottom;">
+                                        Generado: <t t-esc="data['generated_at'].strftime('%d/%m/%Y %H:%M')"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- DATOS DEL RESIDENTE -->
+                        <div style="background: #f0f4f8; border-left: 4px solid #2980b9; padding: 8px 12px; margin-bottom: 10px;">
+                            <div style="font-weight: bold; font-size: 10pt; color: #2980b9; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                Datos del Residente
+                            </div>
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 55%; vertical-align: top;">
+                                        <table>
+                                            <tr>
+                                                <td style="color: #555; width: 100px; padding: 2px 0;"><strong>Nombre:</strong></td>
+                                                <td style="padding: 2px 0; font-size: 11pt; font-weight: bold;"><t t-esc="doc.name"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #555; padding: 2px 0;"><strong>DNI/NIF:</strong></td>
+                                                <td style="padding: 2px 0;"><t t-esc="doc.dni or '-'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #555; padding: 2px 0;"><strong>Fecha nac.:</strong></td>
+                                                <td style="padding: 2px 0;">
+                                                    <t t-esc="doc.fecha_nacimiento.strftime('%d/%m/%Y') if doc.fecha_nacimiento else '-'"/>
+                                                    <t t-if="doc.edad"> (<t t-esc="doc.edad"/> años)</t>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #555; padding: 2px 0;"><strong>Teléfono:</strong></td>
+                                                <td style="padding: 2px 0;"><t t-esc="doc.phone or '-'"/></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="width: 45%; vertical-align: top; padding-left: 20px; border-left: 1px solid #ccc;">
+                                        <table>
+                                            <tr>
+                                                <td style="color: #555; width: 100px; padding: 2px 0;"><strong>Residencia:</strong></td>
+                                                <td style="padding: 2px 0;"><t t-esc="doc.residence_id.name if doc.residence_id else '-'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #555; padding: 2px 0;"><strong>Habitación:</strong></td>
+                                                <td style="padding: 2px 0;"><t t-esc="doc.room_id.name if doc.room_id else '-'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #555; padding: 2px 0;"><strong>Peso:</strong></td>
+                                                <td style="padding: 2px 0;"><t t-esc="'%.1f kg' % doc.weight_kg if doc.weight_kg else '-'"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="color: #555; padding: 2px 0;"><strong>Talla:</strong></td>
+                                                <td style="padding: 2px 0;"><t t-esc="'%.0f cm' % doc.height_cm if doc.height_cm else '-'"/></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- ALERGIAS -->
+                        <div style="background: #fdedec; border: 2px solid #c0392b; border-radius: 3px; padding: 8px 12px; margin-bottom: 10px;">
+                            <div style="font-weight: bold; font-size: 10pt; color: #c0392b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                [!] Alergias Conocidas
+                            </div>
+                            <t t-if="data['allergies']">
+                                <span style="font-size: 11pt; font-weight: bold; color: #922b21;">
+                                    <t t-esc="data['allergies']"/>
+                                </span>
+                            </t>
+                            <t t-else="">
+                                <em style="color: #888;">Sin alergias registradas en el sistema</em>
+                            </t>
+                        </div>
+
+                        <!-- DIAGNOSTICOS: dos columnas -->
+                        <table style="width: 100%; margin-bottom: 10px;">
+                            <tr style="vertical-align: top;">
+                                <td style="width: 50%; padding-right: 6px;">
+                                    <div style="background: #f9f9f9; border-left: 4px solid #27ae60; padding: 6px 10px; height: 100%;">
+                                        <div style="font-weight: bold; font-size: 9pt; color: #27ae60; margin-bottom: 4px; text-transform: uppercase;">
+                                            Diagnósticos Médicos
+                                        </div>
+                                        <t t-if="data['diagnoses']">
+                                            <t t-foreach="data['diagnoses']" t-as="d">
+                                                <div style="padding: 3px 0; border-bottom: 1px solid #e0e0e0;">
+                                                    <small style="color: #888;">
+                                                        <t t-esc="d['date'].strftime('%d/%m/%Y') if d['date'] else ''"/>
+                                                    </small>
+                                                    <t t-if="d['cie10_code']">
+                                                        <span style="background: #e8f5e9; color: #2e7d32; font-weight: bold; padding: 0 4px; border-radius: 2px; font-size: 8pt; margin-left: 4px;">
+                                                            <t t-esc="d['cie10_code']"/>
+                                                        </span>
+                                                    </t>
+                                                    <br/>
+                                                    <span style="font-size: 9pt;"><t t-esc="d['diagnosis']"/></span>
+                                                    <t t-if="d['cie10_name']">
+                                                        <br/><small style="color: #555;"><t t-esc="d['cie10_name']"/></small>
+                                                    </t>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <em style="color: #aaa; font-size: 9pt;">Sin diagnósticos registrados</em>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td style="width: 50%; padding-left: 6px;">
+                                    <div style="background: #f9f9f9; border-left: 4px solid #8e44ad; padding: 6px 10px; height: 100%;">
+                                        <div style="font-weight: bold; font-size: 9pt; color: #8e44ad; margin-bottom: 4px; text-transform: uppercase;">
+                                            Diagnóstico Psicológico
+                                        </div>
+                                        <t t-if="data['psych_data']">
+                                            <t t-set="ps" t-value="data['psych_data']"/>
+                                            <small style="color: #888;">
+                                                <t t-esc="ps['date'].strftime('%d/%m/%Y') if ps['date'] else ''"/>
+                                                <t t-if="ps['psychologist']"> — <t t-esc="ps['psychologist']"/></t>
+                                            </small>
+                                            <t t-if="ps['hypothesis']">
+                                                <div style="margin-top: 4px;">
+                                                    <strong style="font-size: 9pt;">Hipótesis clínica:</strong><br/>
+                                                    <span style="font-size: 9pt;"><t t-esc="ps['hypothesis']"/></span>
+                                                </div>
+                                            </t>
+                                            <t t-if="ps['risk']">
+                                                <div style="margin-top: 4px; background: #fce4ec; padding: 4px; border-radius: 2px;">
+                                                    <strong style="font-size: 9pt; color: #c62828;">Riesgo / alertas:</strong><br/>
+                                                    <span style="font-size: 9pt;"><t t-esc="ps['risk']"/></span>
+                                                </div>
+                                            </t>
+                                            <t t-if="ps['recommendations']">
+                                                <div style="margin-top: 4px;">
+                                                    <strong style="font-size: 9pt;">Recomendaciones:</strong><br/>
+                                                    <span style="font-size: 9pt;"><t t-esc="ps['recommendations']"/></span>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <em style="color: #aaa; font-size: 9pt;">Sin evaluación psicológica registrada</em>
+                                        </t>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- PRESCRIPCIONES ACTIVAS -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: bold; font-size: 9pt; color: #2980b9; background: #ebf5fb; padding: 4px 10px; border-left: 4px solid #2980b9; margin-bottom: 4px; text-transform: uppercase;">
+                                Prescripciones Médicas Activas
+                            </div>
+                            <t t-if="data['prescriptions']">
+                                <table class="table table-sm table-bordered" style="font-size: 9pt; margin-bottom: 0;">
+                                    <thead style="background: #d6eaf8;">
+                                        <tr>
+                                            <th>Medicamento</th>
+                                            <th>Dosis</th>
+                                            <th>Frecuencia</th>
+                                            <th>Vía</th>
+                                            <th>Médico</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="data['prescriptions']" t-as="rx">
+                                            <tr>
+                                                <td><strong><t t-esc="rx['medication']"/></strong></td>
+                                                <td><t t-esc="rx['dosage']"/></td>
+                                                <td><t t-esc="rx['frequency']"/></td>
+                                                <td><t t-esc="rx['via']"/></td>
+                                                <td><t t-esc="rx['doctor']"/></td>
+                                            </tr>
+                                            <t t-if="rx['notes']">
+                                                <tr>
+                                                    <td colspan="5" style="font-size: 8pt; color: #666; font-style: italic;">
+                                                        <strong>Notas:</strong> <t t-esc="rx['notes']"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <em style="color: #aaa; font-size: 9pt;">Sin prescripciones activas</em>
+                            </t>
+                        </div>
+
+                        <!-- TRATAMIENTOS ACTIVOS -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: bold; font-size: 9pt; color: #16a085; background: #e8f8f5; padding: 4px 10px; border-left: 4px solid #16a085; margin-bottom: 4px; text-transform: uppercase;">
+                                Tratamientos Activos
+                            </div>
+                            <t t-if="data['treatments']">
+                                <table class="table table-sm table-bordered" style="font-size: 9pt; margin-bottom: 0;">
+                                    <thead style="background: #d0ece7;">
+                                        <tr>
+                                            <th>Tratamiento</th>
+                                            <th>Tipo</th>
+                                            <th>Inicio</th>
+                                            <th>Responsable</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="data['treatments']" t-as="tr_item">
+                                            <tr>
+                                                <td><strong><t t-esc="tr_item['title']"/></strong></td>
+                                                <td><t t-esc="tr_item['type']"/></td>
+                                                <td><t t-esc="tr_item['start'].strftime('%d/%m/%Y') if tr_item['start'] else '-'"/></td>
+                                                <td><t t-esc="tr_item['responsible']"/></td>
+                                            </tr>
+                                            <t t-if="tr_item['description']">
+                                                <tr>
+                                                    <td colspan="4" style="font-size: 8pt; color: #555; font-style: italic;">
+                                                        <t t-esc="tr_item['description']"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <em style="color: #aaa; font-size: 9pt;">Sin tratamientos activos</em>
+                            </t>
+                        </div>
+
+                        <!-- ULTIMOS RESCATES -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: bold; font-size: 9pt; color: #e67e22; background: #fef9e7; padding: 4px 10px; border-left: 4px solid #e67e22; margin-bottom: 4px; text-transform: uppercase;">
+                                Últimos Rescates / Intervenciones
+                            </div>
+                            <t t-if="data['rescues']">
+                                <table class="table table-sm table-bordered" style="font-size: 9pt; margin-bottom: 0;">
+                                    <thead style="background: #fde8d8;">
+                                        <tr>
+                                            <th style="white-space: nowrap;">Fecha y hora</th>
+                                            <th>Tipo</th>
+                                            <th>Actuación</th>
+                                            <th>Desenlace</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="data['rescues']" t-as="res_item">
+                                            <tr>
+                                                <td style="white-space: nowrap;">
+                                                    <t t-esc="res_item['datetime'].strftime('%d/%m/%Y %H:%M') if res_item['datetime'] else '-'"/>
+                                                </td>
+                                                <td><strong><t t-esc="res_item['type']"/></strong></td>
+                                                <td><t t-esc="res_item['actions']"/></td>
+                                                <td><t t-esc="res_item['outcome']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <em style="color: #aaa; font-size: 9pt;">Sin rescates registrados</em>
+                            </t>
+                        </div>
+
+                        <!-- HISTORIAL CLINICO -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: bold; font-size: 9pt; color: #555; background: #f5f5f5; padding: 4px 10px; border-left: 4px solid #7f8c8d; margin-bottom: 4px; text-transform: uppercase;">
+                                Resumen Historial Clínico (últimas 10 entradas)
+                            </div>
+                            <t t-if="data['history']">
+                                <table class="table table-sm table-bordered" style="font-size: 9pt; margin-bottom: 0;">
+                                    <thead style="background: #ecf0f1;">
+                                        <tr>
+                                            <th style="white-space: nowrap;">Fecha</th>
+                                            <th>Tipo</th>
+                                            <th>Título</th>
+                                            <th>Descripción / Notas</th>
+                                            <th>Profesional</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="data['history']" t-as="h">
+                                            <tr>
+                                                <td style="white-space: nowrap;">
+                                                    <t t-esc="h['date'].strftime('%d/%m/%Y') if h['date'] else '-'"/>
+                                                </td>
+                                                <td><t t-esc="h['type']"/></td>
+                                                <td><strong><t t-esc="h['title']"/></strong></td>
+                                                <td>
+                                                    <t t-if="h['description']"><t t-esc="h['description']"/></t>
+                                                    <t t-if="h['clinical_notes']">
+                                                        <t t-if="h['description']"><br/></t>
+                                                        <em><t t-esc="h['clinical_notes']"/></em>
+                                                    </t>
+                                                    <t t-if="h['treatment_plan']">
+                                                        <br/><small><strong>Plan:</strong> <t t-esc="h['treatment_plan']"/></small>
+                                                    </t>
+                                                </td>
+                                                <td><t t-esc="h['professional']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <em style="color: #aaa; font-size: 9pt;">Sin entradas en el historial clínico</em>
+                            </t>
+                        </div>
+
+                        <!-- ULTIMOS PRN -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-weight: bold; font-size: 9pt; color: #c0392b; background: #fdedec; padding: 4px 10px; border-left: 4px solid #c0392b; margin-bottom: 4px; text-transform: uppercase;">
+                                Últimos PRN Farmacológicos
+                            </div>
+                            <t t-if="data['prn_list']">
+                                <table class="table table-sm table-bordered" style="font-size: 9pt; margin-bottom: 0;">
+                                    <thead style="background: #f9d6d5;">
+                                        <tr>
+                                            <th style="white-space: nowrap;">Fecha y hora</th>
+                                            <th>Medicamento</th>
+                                            <th>Dosis / Vía</th>
+                                            <th>Motivo</th>
+                                            <th>Efecto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="data['prn_list']" t-as="prn">
+                                            <tr>
+                                                <td style="white-space: nowrap;">
+                                                    <t t-esc="prn['datetime'].strftime('%d/%m/%Y %H:%M') if prn['datetime'] else '-'"/>
+                                                </td>
+                                                <td><strong><t t-esc="prn['medication']"/></strong></td>
+                                                <td><t t-esc="prn['dose']"/> / <t t-esc="prn['route']"/></td>
+                                                <td><t t-esc="prn['reason']"/></td>
+                                                <td><t t-esc="prn['effect']"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                            <t t-else="">
+                                <em style="color: #aaa; font-size: 9pt;">Sin PRN registrados</em>
+                            </t>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

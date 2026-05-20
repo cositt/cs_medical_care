@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- IR Sequences will be added as needed -->
+        <record id="seq_cs_medical_prn_rescue" model="ir.sequence">
+            <field name="name">Rescate PRN farmacológico</field>
+            <field name="code">cs.medical.prn.rescue</field>
+            <field name="prefix">PRN/%(y)s/</field>
+            <field name="padding">5</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" eval="False"/>
+        </record>
     </data>
 </odoo>

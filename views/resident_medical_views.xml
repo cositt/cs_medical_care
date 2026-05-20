@@ -6,6 +6,13 @@
         <field name="model">cs.resident</field>
         <field name="inherit_id" ref="cs_resident.resident_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_print_emergency_sheet"
+                        string="Adquirir Hoja de Emergencia"
+                        type="object"
+                        class="btn-danger"
+                        icon="fa-ambulance"/>
+            </xpath>
             <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
                 <div class="oe_button_box" name="button_box">
                     <button
