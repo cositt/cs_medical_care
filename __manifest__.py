@@ -4,7 +4,7 @@
     'category': 'Healthcare',
     'author': 'Equilibrium',
     'license': 'LGPL-3',
-    'depends': ['base', 'mail', 'cs_resident', 'cs_patient_followup_forms'],
+    'depends': ['base', 'mail', 'cs_resident', 'cs_patient_followup'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_sequence.xml',
