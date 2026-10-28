@@ -4,6 +4,9 @@ from odoo import _, api, fields, models
 class ResidentMedical(models.Model):
     _inherit = "cs.resident"
 
+    weight_kg = fields.Float(string="Peso (kg)")
+    height_cm = fields.Float(string="Talla (cm)")
+
     prescription_ids = fields.One2many(
         "cs.prescription",
         "resident_id",
